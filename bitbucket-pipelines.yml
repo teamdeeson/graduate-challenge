@@ -1,0 +1,22 @@
+clone:
+  depth: full
+
+pipelines:
+  branches:
+    master:
+     - step:
+          name: Build static site
+          image: teamdeeson/mkdocs:latest
+          script:
+            - mkdocs build --clean
+            - echo -e "# Deeson Graduate Challenge\n\n[Show us what you have learned](https://graduate-challenge.deeson.co.uk)\n\nIf you need to edit the instructions. Do so at the [Bitbucket repository](https://bitbucket.org/deesongroup6346/graduate-test/)" > site/README.md
+          artifacts:
+            - '**'
+     - step:
+          name: Relay
+          image: deeson/deployer
+          deployment: production
+          script:
+            - make deploy
+          artifacts:
+            - '**'
